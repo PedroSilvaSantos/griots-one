@@ -1,4 +1,5 @@
 import { Check } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Container } from '../layout/Container'
 import { SectionHeader } from '../layout/SectionHeader'
 import { pricingPlans } from '../../services/siteContent'
@@ -6,6 +7,8 @@ import { Button } from '../layout/Button'
 import { cn } from '../../services/cn'
 
 export function Pricing() {
+  const navigate = useNavigate()
+
   return (
     <section id="pricing" className="py-16 sm:py-24">
       <Container className="space-y-10">
@@ -63,6 +66,7 @@ export function Pricing() {
               <Button
                 variant={plan.highlighted ? 'secondary' : 'primary'}
                 className={cn('mt-8 h-11 w-full', plan.highlighted && 'bg-white text-[var(--brand-ink)]')}
+                onClick={() => navigate('/login')}
               >
                 Escolher plano
               </Button>

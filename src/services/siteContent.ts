@@ -23,11 +23,11 @@ export type PlanItem = {
 }
 
 export const navLinks: NavLink[] = [
-  { id: 'hero', label: 'Produto' },
-  { id: 'features', label: 'Features' },
-  { id: 'how-it-works', label: 'Como funciona' },
-  { id: 'demo', label: 'Demo' },
-  { id: 'pricing', label: 'Pricing' },
+  { id: 'hero', label: 'Inicio' },
+  { id: 'features', label: 'Recursos' },
+  { id: 'how-it-works', label: 'Como Funciona' },
+  { id: 'pricing', label: 'Planos' },
+  { id: 'contato', label: 'Contato' },
 ]
 
 export const featureItems: FeatureItem[] = [

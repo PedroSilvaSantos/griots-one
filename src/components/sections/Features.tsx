@@ -40,12 +40,12 @@ const featureCards: FeatureCard[] = [
   },
   {
     icon: BarChart3,
-    title: 'Analytics',
+    title: 'Analiticos',
     description: 'Acompanhe downloads, acessos e conversoes.',
   },
   {
     icon: Palette,
-    title: 'White Label',
+    title: 'Marca Branca',
     description: 'Troque logo, cores e identidade visual rapidamente.',
   },
 ]
@@ -70,7 +70,7 @@ export function Features() {
     <section id="features" className="py-20 sm:py-24 lg:py-28">
       <Container className="space-y-12">
         <SectionHeader
-          eyebrow="Features"
+          eyebrow="Recursos"
           title="Tudo que voce precisa para lancar campanhas digitais"
           description="Uma plataforma completa para campanhas politicas, eventos e empresas."
           align="center"

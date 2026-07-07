@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion'
 import { ArrowUpRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Container } from '../layout/Container'
 import { SectionHeader } from '../layout/SectionHeader'
 import { Button } from '../layout/Button'
@@ -23,6 +24,8 @@ const cases = [
 ]
 
 export function Cases() {
+  const navigate = useNavigate()
+
   return (
     <section id="cases" className="py-20 sm:py-24 lg:py-28">
       <Container className="space-y-12">
@@ -53,7 +56,11 @@ export function Cases() {
               </p>
               <h3 className="mt-3 font-display text-3xl leading-tight text-[var(--brand-ink)]">{item.title}</h3>
 
-              <Button variant="secondary" className="mt-6 h-11 w-full justify-center gap-2 text-sm">
+              <Button
+                variant="secondary"
+                className="mt-6 h-11 w-full justify-center gap-2 text-sm"
+                onClick={() => navigate('/demo/dr-viralata')}
+              >
                 Ver demonstracao
                 <ArrowUpRight size={15} />
               </Button>

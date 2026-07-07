@@ -8,7 +8,7 @@ export function Analytics() {
     <div className="space-y-6">
       <section className="flex flex-col gap-4 rounded-2xl border border-white/70 bg-white/80 p-6 shadow-[0_10px_28px_-20px_rgba(16,35,63,0.45)] backdrop-blur-md dark:border-white/10 dark:bg-[#11151c]/75 md:flex-row md:items-center md:justify-between">
         <div>
-          <h2 className="font-display text-4xl text-[var(--brand-ink)] dark:text-slate-100">Analytics</h2>
+          <h2 className="font-display text-4xl text-[var(--brand-ink)] dark:text-slate-100">Analises</h2>
           <p className="mt-2 text-sm text-[var(--brand-muted)] dark:text-slate-400">
             Painel de desempenho com filtros e leitura executiva.
           </p>
@@ -35,7 +35,7 @@ export function Analytics() {
 
       <section className="rounded-2xl border border-white/70 bg-white/80 p-5 shadow-[0_10px_28px_-20px_rgba(16,35,63,0.45)] backdrop-blur-md dark:border-white/10 dark:bg-[#11151c]/75">
         <div className="mb-4 flex items-end justify-between">
-          <h3 className="font-display text-3xl text-[var(--brand-ink)] dark:text-slate-100">Funnel Snapshot</h3>
+          <h3 className="font-display text-3xl text-[var(--brand-ink)] dark:text-slate-100">Resumo do Funil</h3>
           <p className="text-xs font-semibold uppercase tracking-[0.1em] text-[var(--brand-muted)] dark:text-slate-400">
             Atualizado agora
           </p>

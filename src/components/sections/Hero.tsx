@@ -1,8 +1,11 @@
 import { ArrowUpRight, Sparkles } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../layout/Button'
 import { Container } from '../layout/Container'
 
 export function Hero() {
+  const navigate = useNavigate()
+
   return (
     <section id="hero" className="relative overflow-hidden pt-20 pb-16 sm:pt-24 sm:pb-24">
       <Container>
@@ -10,7 +13,7 @@ export function Hero() {
           <div className="space-y-8">
             <div className="inline-flex items-center gap-2 rounded-full border border-[var(--stroke)] bg-white/80 px-3 py-1.5 text-xs font-semibold uppercase tracking-[0.18em] text-[var(--brand-muted)]">
               <Sparkles size={14} />
-              SaaS Operating System
+              Sistema Operacional SaaS
             </div>
             <div className="space-y-6">
               <h1 className="font-display text-5xl leading-[0.95] text-[var(--brand-ink)] sm:text-6xl lg:text-7xl">
@@ -22,9 +25,18 @@ export function Hero() {
               </p>
             </div>
             <div className="flex flex-col gap-3 sm:flex-row">
-              <Button className="h-12 px-7 text-sm uppercase tracking-[0.12em]">Solicitar acesso</Button>
-              <Button variant="secondary" className="h-12 px-7 text-sm uppercase tracking-[0.12em]">
-                Ver demonstração
+              <Button
+                className="h-12 px-7 text-sm uppercase tracking-[0.12em]"
+                onClick={() => navigate('/login')}
+              >
+                Solicitar Demonstracao
+              </Button>
+              <Button
+                variant="secondary"
+                className="h-12 px-7 text-sm uppercase tracking-[0.12em]"
+                onClick={() => navigate('/demo/dr-viralata')}
+              >
+                Ver Demonstracao
               </Button>
             </div>
           </div>
@@ -32,7 +44,7 @@ export function Hero() {
           <div className="section-panel relative p-5 sm:p-7">
             <div className="rounded-2xl border border-[var(--stroke)] bg-[#f8fbfc] p-6 sm:p-8">
               <div className="mb-6 flex items-center justify-between">
-                <p className="text-sm font-semibold text-[var(--brand-ink)]">Pulse Overview</p>
+                <p className="text-sm font-semibold text-[var(--brand-ink)]">Resumo de Performance</p>
                 <span className="rounded-full bg-[#d9f5ef] px-3 py-1 text-xs font-semibold text-[#0f766e]">
                   +24.8%
                 </span>
@@ -52,13 +64,14 @@ export function Hero() {
                     <p className="mt-1 text-lg font-bold text-[var(--brand-ink)]">72</p>
                   </div>
                 </div>
-                <a
-                  href="#demo"
+                <button
+                  type="button"
+                  onClick={() => navigate('/admin/dashboard')}
                   className="inline-flex items-center gap-1.5 text-sm font-semibold text-[var(--brand-ink)]"
                 >
                   Abrir visão executiva
                   <ArrowUpRight size={16} />
-                </a>
+                </button>
               </div>
             </div>
           </div>

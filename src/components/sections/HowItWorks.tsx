@@ -30,7 +30,7 @@ export function HowItWorks() {
     <section id="how-it-works" className="py-20 sm:py-24 lg:py-28">
       <Container className="space-y-12">
         <SectionHeader
-          eyebrow="How It Works"
+          eyebrow="Como Funciona"
           title="Como funciona"
           description="Quatro passos para colocar sua campanha no ar."
           align="center"

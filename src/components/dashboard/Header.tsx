@@ -49,7 +49,7 @@ export function Header({ title, onToggleSidebar }: HeaderProps) {
             <div className="hidden sm:block">
               <p className="text-sm font-semibold text-[var(--brand-ink)] dark:text-slate-100">Pedro Silva</p>
               <p className="text-[11px] uppercase tracking-[0.1em] text-[var(--brand-muted)] dark:text-slate-400">
-                Founder
+                Fundador
               </p>
             </div>
           </div>

@@ -1,5 +1,6 @@
 import { Menu, X } from 'lucide-react'
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { navLinks } from '../../services/siteContent'
 import { cn } from '../../services/cn'
 import { Button } from './Button'
@@ -34,8 +35,13 @@ export function Navbar() {
           ))}
         </nav>
 
-        <div className="hidden md:block">
-          <Button>Entrar na lista</Button>
+        <div className="hidden items-center gap-2 md:flex">
+          <Link to="/login">
+            <Button variant="ghost">Entrar</Button>
+          </Link>
+          <Link to="/demo/dr-viralata">
+            <Button>Solicitar Demonstracao</Button>
+          </Link>
         </div>
 
         <button
@@ -61,7 +67,14 @@ export function Navbar() {
                 {link.label}
               </a>
             ))}
-            <Button className="mt-2 w-full">Entrar na lista</Button>
+            <Link to="/login" onClick={() => setOpen(false)}>
+              <Button variant="ghost" className="mt-2 w-full">
+                Entrar
+              </Button>
+            </Link>
+            <Link to="/demo/dr-viralata" onClick={() => setOpen(false)}>
+              <Button className="w-full">Solicitar Demonstracao</Button>
+            </Link>
           </Container>
         </div>
       ) : null}

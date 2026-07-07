@@ -4,7 +4,9 @@ import { DashboardPreview } from '../components/sections/DashboardPreview'
 import { Features } from '../components/sections/Features'
 import { Hero } from '../components/sections/Hero'
 import { HowItWorks } from '../components/sections/HowItWorks'
+import { Pricing } from '../components/sections/Pricing'
 import { TrustedBy } from '../components/sections/TrustedBy'
+import { CTA } from '../components/sections/CTA'
 
 export function Home() {
   return (
@@ -17,6 +19,8 @@ export function Home() {
         <TrustedBy />
         <DashboardPreview />
         <Cases />
+        <Pricing />
+        <CTA />
       </main>
     </div>
   )

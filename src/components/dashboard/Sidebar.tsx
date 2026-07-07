@@ -1,14 +1,11 @@
 import { motion } from 'framer-motion'
 import {
   BarChart3,
-  FileImage,
   FolderKanban,
   LayoutDashboard,
   LogOut,
   Menu,
   Settings,
-  Sparkles,
-  UserCircle,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
 import { cn } from '../../services/cn'
@@ -27,14 +24,11 @@ type Item = {
 }
 
 const items: Item[] = [
-  { label: 'Dashboard', to: '/admin/dashboard', icon: LayoutDashboard },
-  { label: 'Campaigns', to: '/admin/campaigns', icon: FolderKanban },
-  { label: 'Analytics', to: '/admin/analytics', icon: BarChart3 },
-  { label: 'Templates', icon: Sparkles },
-  { label: 'Media', icon: FileImage },
-  { label: 'Settings', to: '/admin/settings', icon: Settings },
-  { label: 'Profile', icon: UserCircle },
-  { label: 'Logout', icon: LogOut },
+  { label: 'Painel', to: '/admin/dashboard', icon: LayoutDashboard },
+  { label: 'Experiencias', to: '/admin/experiences', icon: FolderKanban },
+  { label: 'Analises', to: '/admin/analytics', icon: BarChart3 },
+  { label: 'Configuracoes', to: '/admin/settings', icon: Settings },
+  { label: 'Sair', to: '/', icon: LogOut },
 ]
 
 function SidebarNav({ collapsed, onItemClick }: { collapsed: boolean; onItemClick?: () => void }) {
@@ -55,6 +49,8 @@ function SidebarNav({ collapsed, onItemClick }: { collapsed: boolean; onItemClic
                   isActive
                     ? 'bg-[var(--brand-ink)] text-white dark:bg-slate-100 dark:text-slate-900'
                     : 'text-[var(--brand-muted)] hover:bg-white hover:text-[var(--brand-ink)] dark:text-slate-400 dark:hover:bg-[#151e2b] dark:hover:text-slate-200',
+                  item.label === 'Sair' &&
+                    'text-rose-600 hover:bg-rose-50 hover:text-rose-700 dark:text-rose-300 dark:hover:bg-rose-500/10',
                 )
               }
             >
@@ -64,17 +60,7 @@ function SidebarNav({ collapsed, onItemClick }: { collapsed: boolean; onItemClic
           )
         }
 
-        return (
-          <button
-            type="button"
-            key={item.label}
-            onClick={onItemClick}
-            className="flex h-11 w-full items-center gap-3 rounded-xl px-3 text-sm font-medium text-[var(--brand-muted)] transition-colors hover:bg-white hover:text-[var(--brand-ink)] dark:text-slate-400 dark:hover:bg-[#151e2b] dark:hover:text-slate-200"
-          >
-            <Icon size={18} />
-            {!collapsed ? <span>{item.label}</span> : null}
-          </button>
-        )
+        return null
       })}
     </nav>
   )

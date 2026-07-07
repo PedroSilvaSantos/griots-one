@@ -1,10 +1,13 @@
 import { ArrowRight } from 'lucide-react'
+import { useNavigate } from 'react-router-dom'
 import { Button } from '../layout/Button'
 import { Container } from '../layout/Container'
 
 export function CTA() {
+  const navigate = useNavigate()
+
   return (
-    <section className="py-16 sm:py-24">
+    <section id="contato" className="py-16 sm:py-24">
       <Container>
         <div className="section-panel overflow-hidden bg-[var(--brand-ink)] p-8 text-[var(--brand-white)] sm:p-12">
           <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
@@ -17,7 +20,11 @@ export function CTA() {
                 Entre para a lista de acesso antecipado e receba um blueprint de implantação com nosso time.
               </p>
             </div>
-            <Button variant="secondary" className="h-12 gap-2 px-7 text-sm uppercase tracking-[0.12em]">
+            <Button
+              variant="secondary"
+              className="h-12 gap-2 px-7 text-sm uppercase tracking-[0.12em]"
+              onClick={() => navigate('/login')}
+            >
               Entrar na waitlist
               <ArrowRight size={15} />
             </Button>
