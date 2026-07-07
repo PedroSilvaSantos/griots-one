@@ -1,14 +1,14 @@
-import type { CampaignRow } from '../../mocks/dashboard'
+import type { ExperienceRow } from '../../mocks/dashboard'
 
-type CampaignTableProps = {
-  rows: CampaignRow[]
+type ExperienceTableProps = {
+  rows: ExperienceRow[]
 }
 
-export function CampaignTable({ rows }: CampaignTableProps) {
+export function ExperienceTable({ rows }: ExperienceTableProps) {
   return (
     <div className="overflow-hidden rounded-2xl border border-[#dce5ec] bg-white dark:border-white/10 dark:bg-[#10161f]">
       <div className="grid grid-cols-[1.3fr_0.8fr_0.7fr_0.7fr_0.5fr] border-b border-[#dce5ec] bg-[#f3f7fb] px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.09em] text-[var(--brand-muted)] dark:border-white/10 dark:bg-[#0f1722] dark:text-slate-400">
-        <p>Campanha</p>
+        <p>Experiencia</p>
         <p>Status</p>
         <p className="text-right">Fotos</p>
         <p className="text-right">Downloads</p>

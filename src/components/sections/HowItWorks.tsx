@@ -4,7 +4,7 @@ import { SectionHeader } from '../layout/SectionHeader'
 import { Container } from '../layout/Container'
 
 const steps = [
-  'Crie sua campanha',
+  'Crie sua experiencia',
   'Personalize',
   'Compartilhe',
   'Acompanhe resultados',
@@ -32,7 +32,7 @@ export function HowItWorks() {
         <SectionHeader
           eyebrow="Como Funciona"
           title="Como funciona"
-          description="Quatro passos para colocar sua campanha no ar."
+          description="Quatro passos para colocar sua experiencia no ar."
           align="center"
         />
 

@@ -1,10 +1,15 @@
 import { motion } from 'framer-motion'
-import { ArrowUpRight } from 'lucide-react'
-import { useMemo } from 'react'
+import { ArrowUpRight, Trash2 } from 'lucide-react'
+import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { Button } from '../components/layout/Button'
-import { EXPERIENCES_STORAGE_KEY } from '../features/experience/mocks/experience'
 import type { Experience } from '../features/experience/types/experience'
+import { deleteExperience, getExperiences } from '../services/experience.service'
+
+const statusLabels: Record<Experience['status'], string> = {
+  draft: 'Rascunho',
+  published: 'Publicado',
+}
 
 const templates = [
   { title: 'Campanha', subtitle: 'Mobilizacao e engajamento' },
@@ -15,18 +20,16 @@ const templates = [
 
 export function Experiences() {
   const navigate = useNavigate()
+  const [savedExperiences, setSavedExperiences] = useState<Experience[]>([])
 
-  const savedExperiences = useMemo(() => {
-    const raw = localStorage.getItem(EXPERIENCES_STORAGE_KEY)
-    if (!raw) return [] as Experience[]
-
-    try {
-      const parsed = JSON.parse(raw) as Experience[]
-      return Array.isArray(parsed) ? parsed : []
-    } catch {
-      return [] as Experience[]
-    }
+  useEffect(() => {
+    setSavedExperiences(getExperiences())
   }, [])
+
+  const handleDelete = (id: string) => {
+    deleteExperience(id)
+    setSavedExperiences(getExperiences())
+  }
 
   return (
     <div className="space-y-6">
@@ -35,7 +38,7 @@ export function Experiences() {
           <div>
             <h2 className="font-display text-4xl text-[var(--brand-ink)] dark:text-slate-100">Experiencias</h2>
             <p className="mt-2 text-sm text-[var(--brand-muted)] dark:text-slate-400">
-              Crie experiencias para campanhas, eventos e marcas sem alterar codigo.
+              Crie experiencias para eventos, marcas e projetos institucionais sem alterar codigo.
             </p>
           </div>
 
@@ -59,7 +62,7 @@ export function Experiences() {
                     {experience.name || experience.slug}
                   </p>
                   <p className="text-xs uppercase tracking-[0.08em] text-[var(--brand-muted)] dark:text-slate-400">
-                    {experience.status} • /demo/{experience.slug}
+                    {statusLabels[experience.status] ?? experience.status} • /demo/{experience.slug}
                   </p>
                 </div>
 
@@ -77,6 +80,14 @@ export function Experiences() {
                   >
                     Visualizar
                   </Button>
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(experience.id)}
+                    className="inline-flex h-9 items-center gap-2 rounded-full border border-rose-200 px-4 text-[11px] font-semibold uppercase tracking-[0.1em] text-rose-600 transition-colors hover:bg-rose-50"
+                  >
+                    <Trash2 size={14} />
+                    Excluir
+                  </button>
                 </div>
               </div>
             ))}

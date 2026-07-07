@@ -27,7 +27,7 @@ export function TrustedBy() {
             transition={{ duration: 0.45 }}
             className="text-center text-sm font-semibold uppercase tracking-[0.12em] text-[var(--brand-muted)]"
           >
-            Empresas, campanhas e eventos confiam na Griots One
+            Empresas, experiencias e eventos confiam na Griots One
           </motion.p>
 
           <div className="mt-7 grid grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:flex lg:flex-wrap lg:items-center lg:justify-between lg:gap-8">

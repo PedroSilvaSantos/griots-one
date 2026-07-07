@@ -1,8 +1,8 @@
 import { motion } from 'framer-motion'
 import { ActivityTimeline } from '../components/dashboard/ActivityTimeline'
-import { CampaignTable } from '../components/dashboard/CampaignTable'
+import { ExperienceTable } from '../components/dashboard/ExperienceTable'
 import { StatCard } from '../components/dashboard/StatCard'
-import { campaignRows, dashboardBars, dashboardStats, timelineEvents } from '../mocks/dashboard'
+import { dashboardBars, dashboardStats, experienceRows, timelineEvents } from '../mocks/dashboard'
 
 export function Dashboard() {
   return (
@@ -51,7 +51,7 @@ export function Dashboard() {
       </section>
 
       <section>
-        <CampaignTable rows={campaignRows} />
+        <ExperienceTable rows={experienceRows} />
       </section>
     </div>
   )

@@ -4,16 +4,16 @@ import { Button } from '../layout/Button'
 import { Container } from '../layout/Container'
 
 const metrics = [
-  { label: 'Campanhas Ativas', value: '18' },
+  { label: 'Experiencias Ativas', value: '18' },
   { label: 'Downloads', value: '24.820' },
   { label: 'Uploads', value: '31.552' },
   { label: 'Conversao', value: '82%' },
 ]
 
 const tableRows = [
-  { campaign: 'Dr Vira-Lata', status: 'Ativa', downloads: '5230' },
-  { campaign: 'Evento Outubro Rosa', status: 'Ativa', downloads: '3210' },
-  { campaign: 'Empresa XPTO', status: 'Ativa', downloads: '1244' },
+  { experience: 'Dr Vira-Lata', status: 'Ativa', downloads: '5230' },
+  { experience: 'Evento Outubro Rosa', status: 'Ativa', downloads: '3210' },
+  { experience: 'Empresa XPTO', status: 'Ativa', downloads: '1244' },
 ]
 
 const barHeights = ['h-16', 'h-24', 'h-14', 'h-28', 'h-20', 'h-32', 'h-[72px]']
@@ -37,7 +37,7 @@ export function DashboardPreview() {
               Gerencie tudo em um unico lugar
             </h2>
             <p className="max-w-xl text-base text-[var(--brand-muted)] sm:text-lg">
-              Acompanhe campanhas, downloads, compartilhamentos e metricas em tempo real.
+              Acompanhe experiencias, downloads, compartilhamentos e metricas em tempo real.
             </p>
             <Button className="h-12 px-7 text-sm uppercase tracking-[0.12em]">
               Ver Dashboard
@@ -58,7 +58,7 @@ export function DashboardPreview() {
                   <p className="mb-6 font-display text-sm text-[var(--brand-ink)]">Griots</p>
                   <nav className="space-y-2 text-xs font-semibold text-[var(--brand-muted)] sm:text-sm">
                     <p className="rounded-lg bg-[var(--brand-ink)] px-2.5 py-2 text-white">Dashboard</p>
-                    <p className="rounded-lg px-2.5 py-2 hover:bg-[#eef4f8]">Campaigns</p>
+                    <p className="rounded-lg px-2.5 py-2 hover:bg-[#eef4f8]">Experiences</p>
                     <p className="rounded-lg px-2.5 py-2 hover:bg-[#eef4f8]">Analytics</p>
                     <p className="rounded-lg px-2.5 py-2 hover:bg-[#eef4f8]">Settings</p>
                   </nav>
@@ -99,17 +99,17 @@ export function DashboardPreview() {
 
                   <div className="mt-4 overflow-hidden rounded-xl border border-[#dce5ec] bg-white">
                     <div className="grid grid-cols-[1.3fr_0.8fr_0.6fr] border-b border-[#dce5ec] bg-[#f4f8fb] px-3 py-2 text-[11px] font-semibold uppercase tracking-[0.08em] text-[var(--brand-muted)] sm:px-4">
-                      <p>Campanha</p>
+                      <p>Experiencia</p>
                       <p>Status</p>
                       <p className="text-right">Downloads</p>
                     </div>
                     <div className="divide-y divide-[#edf3f7]">
                       {tableRows.map((row) => (
                         <div
-                          key={row.campaign}
+                          key={row.experience}
                           className="grid grid-cols-[1.3fr_0.8fr_0.6fr] items-center px-3 py-2.5 text-xs text-[var(--brand-ink)] sm:px-4 sm:text-sm"
                         >
-                          <p className="font-semibold">{row.campaign}</p>
+                          <p className="font-semibold">{row.experience}</p>
                           <span className="inline-flex w-fit rounded-full bg-[#dcf7ef] px-2 py-1 text-[10px] font-semibold uppercase tracking-[0.06em] text-[#0f766e] sm:text-[11px]">
                             {row.status}
                           </span>

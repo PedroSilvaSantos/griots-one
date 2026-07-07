@@ -1,7 +1,5 @@
 import type { Experience, ExperienceCategory, ExperienceStatus } from '../types/experience'
 
-export const EXPERIENCES_STORAGE_KEY = 'griots.experiences.v1'
-
 export const experienceCategories: ExperienceCategory[] = [
   'Campanha',
   'Evento',
@@ -13,7 +11,7 @@ export const experienceCategories: ExperienceCategory[] = [
   'Outro',
 ]
 
-export const experienceStatuses: ExperienceStatus[] = ['Rascunho', 'Publicado']
+export const experienceStatuses: ExperienceStatus[] = ['draft', 'published']
 
 export function createEmptyExperience(): Experience {
   const now = new Date().toISOString()
@@ -23,7 +21,7 @@ export function createEmptyExperience(): Experience {
     name: '',
     slug: '',
     category: 'Campanha',
-    status: 'Rascunho',
+    status: 'draft',
     brand: {
       logo: '',
       hero: '',

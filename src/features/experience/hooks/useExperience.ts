@@ -1,5 +1,10 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { EXPERIENCES_STORAGE_KEY, createEmptyExperience } from '../mocks/experience'
+import {
+  createExperience,
+  getExperienceById,
+  updateExperience,
+} from '../../../services/experience.service'
+import { createEmptyExperience } from '../mocks/experience'
 import type { Experience } from '../types/experience'
 
 function slugify(value: string) {
@@ -12,54 +17,31 @@ function slugify(value: string) {
     .replace(/(^-|-$)+/g, '')
 }
 
-function createId() {
-  if (typeof crypto !== 'undefined' && 'randomUUID' in crypto) {
-    return crypto.randomUUID()
-  }
-
-  return `exp-${Date.now()}`
-}
-
-function readExperiences() {
-  const raw = localStorage.getItem(EXPERIENCES_STORAGE_KEY)
-
-  if (!raw) return [] as Experience[]
-
-  try {
-    const parsed = JSON.parse(raw) as Experience[]
-    return Array.isArray(parsed) ? parsed : []
-  } catch {
-    return [] as Experience[]
-  }
-}
-
-function writeExperiences(experiences: Experience[]) {
-  localStorage.setItem(EXPERIENCES_STORAGE_KEY, JSON.stringify(experiences))
-}
-
 export function useExperience(experienceId?: string) {
   const [experience, setExperience] = useState<Experience>(createEmptyExperience)
   const [isSaved, setIsSaved] = useState(false)
+  const [error, setError] = useState<string>('')
 
   useEffect(() => {
-    const experiences = readExperiences()
-
     if (!experienceId) {
       setExperience(createEmptyExperience())
       setIsSaved(false)
+      setError('')
       return
     }
 
-    const existing = experiences.find((item) => item.id === experienceId)
+    const existing = getExperienceById(experienceId)
 
     if (existing) {
       setExperience(existing)
       setIsSaved(true)
+      setError('')
       return
     }
 
     setExperience(createEmptyExperience())
     setIsSaved(false)
+    setError('Experiencia nao encontrada.')
   }, [experienceId])
 
   const updateField = useCallback(<K extends keyof Experience>(field: K, value: Experience[K]) => {
@@ -145,32 +127,23 @@ export function useExperience(experienceId?: string) {
 
   const saveExperience = useCallback(
     (nextStatus?: Experience['status']) => {
-      const now = new Date().toISOString()
-      const slug = slugify(experience.slug || experience.name)
-      const nextId = experience.id || createId()
-      const normalized: Experience = {
+      const payload: Experience = {
         ...experience,
-        id: nextId,
-        slug,
+        slug: slugify(experience.slug || experience.name),
         status: nextStatus ?? experience.status,
-        createdAt: experience.createdAt || now,
-        updatedAt: now,
       }
 
-      const experiences = readExperiences()
-      const index = experiences.findIndex((item) => item.id === nextId)
+      try {
+        const saved = experience.id ? updateExperience(payload) : createExperience(payload)
+        setExperience(saved)
+        setIsSaved(true)
+        setError('')
 
-      if (index >= 0) {
-        experiences[index] = normalized
-      } else {
-        experiences.unshift(normalized)
+        return saved
+      } catch (reason) {
+        setError(reason instanceof Error ? reason.message : 'Falha ao salvar experiencia.')
+        return null
       }
-
-      writeExperiences(experiences)
-      setExperience(normalized)
-      setIsSaved(true)
-
-      return normalized
     },
     [experience],
   )
@@ -192,5 +165,7 @@ export function useExperience(experienceId?: string) {
     updateSocial,
     updateSetting,
     saveExperience,
+    error,
+    clearError: () => setError(''),
   }
 }

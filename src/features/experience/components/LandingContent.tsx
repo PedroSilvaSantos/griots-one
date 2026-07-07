@@ -1,6 +1,11 @@
 import { experienceCategories, experienceStatuses } from '../mocks/experience'
 import type { Experience } from '../types/experience'
 
+const statusLabels: Record<Experience['status'], string> = {
+  draft: 'Rascunho',
+  published: 'Publicado',
+}
+
 type LandingContentProps = {
   experience: Experience
   onFieldChange: <K extends keyof Experience>(field: K, value: Experience[K]) => void
@@ -87,7 +92,7 @@ export function LandingContent({
             >
               {experienceStatuses.map((status) => (
                 <option key={status} value={status}>
-                  {status}
+                  {statusLabels[status]}
                 </option>
               ))}
             </select>

@@ -8,7 +8,7 @@ export type ExperienceCategory =
   | 'Show'
   | 'Outro'
 
-export type ExperienceStatus = 'Rascunho' | 'Publicado'
+export type ExperienceStatus = 'draft' | 'published'
 
 export interface Experience {
   id: string

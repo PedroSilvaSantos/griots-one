@@ -32,7 +32,7 @@ export function Cases() {
         <SectionHeader
           eyebrow="Cases"
           title="Conheca alguns cases"
-          description="A mesma plataforma atende campanhas politicas, eventos e empresas."
+          description="A mesma plataforma atende experiencias politicas, eventos e empresas."
           align="center"
         />
 

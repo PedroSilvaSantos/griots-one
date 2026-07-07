@@ -4,7 +4,7 @@ export type DashboardStat = {
   trend: string
 }
 
-export type CampaignRow = {
+export type ExperienceRow = {
   name: string
   status: 'Ativa' | 'Pausada' | 'Rascunho'
   photos: number
@@ -17,13 +17,13 @@ export type TimelineEvent = {
   description: string
 }
 
-export type CampaignTypeCard = {
+export type ExperienceTypeCard = {
   title: string
   subtitle: string
 }
 
 export const dashboardStats: DashboardStat[] = [
-  { label: 'Campanhas Ativas', value: '18', trend: '+12%' },
+  { label: 'Experiencias Ativas', value: '18', trend: '+12%' },
   { label: 'Fotos Geradas', value: '28.420', trend: '+8%' },
   { label: 'Downloads', value: '22.115', trend: '+15%' },
   { label: 'Conversao', value: '82%', trend: '+4%' },
@@ -31,7 +31,7 @@ export const dashboardStats: DashboardStat[] = [
 
 export const dashboardBars = [44, 62, 55, 78, 66, 84, 71]
 
-export const campaignRows: CampaignRow[] = [
+export const experienceRows: ExperienceRow[] = [
   {
     name: 'Dr Vira-Lata',
     status: 'Ativa',
@@ -56,14 +56,14 @@ export const campaignRows: CampaignRow[] = [
 ]
 
 export const timelineEvents: TimelineEvent[] = [
-  { period: 'Hoje', description: 'Nova campanha criada' },
+  { period: 'Hoje', description: 'Nova experiencia criada' },
   { period: 'Hoje', description: '234 imagens geradas' },
   { period: 'Ontem', description: 'Novo usuario' },
   { period: 'Ontem', description: 'Atualizacao de layout' },
 ]
 
-export const campaignTypeCards: CampaignTypeCard[] = [
-  { title: '+ Nova Campanha', subtitle: 'Criar fluxo completo' },
+export const experienceTypeCards: ExperienceTypeCard[] = [
+  { title: '+ Nova Experiencia', subtitle: 'Criar fluxo completo' },
   { title: 'Campanha Politica', subtitle: 'Eleitoral e institucional' },
   { title: 'Evento', subtitle: 'Ingressos e comunicacao' },
   { title: 'Empresa', subtitle: 'Marketing e marca' },

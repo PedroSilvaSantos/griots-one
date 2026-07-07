@@ -21,7 +21,7 @@ const featureCards: FeatureCard[] = [
   {
     icon: Rocket,
     title: 'Landing Personalizada',
-    description: 'Crie paginas exclusivas para qualquer campanha.',
+    description: 'Crie paginas exclusivas para qualquer experiencia.',
   },
   {
     icon: Image,
@@ -36,7 +36,7 @@ const featureCards: FeatureCard[] = [
   {
     icon: LayoutDashboard,
     title: 'Painel Administrativo',
-    description: 'Gerencie campanhas sem editar codigo.',
+    description: 'Gerencie experiencias sem editar codigo.',
   },
   {
     icon: BarChart3,
@@ -71,8 +71,8 @@ export function Features() {
       <Container className="space-y-12">
         <SectionHeader
           eyebrow="Recursos"
-          title="Tudo que voce precisa para lancar campanhas digitais"
-          description="Uma plataforma completa para campanhas politicas, eventos e empresas."
+          title="Tudo que voce precisa para lancar experiencias digitais"
+          description="Uma plataforma completa para experiencias politicas, eventos e empresas."
           align="center"
         />
 

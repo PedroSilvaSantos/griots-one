@@ -24,6 +24,8 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
     updateSocial,
     updateSetting,
     saveExperience,
+    error,
+    clearError,
   } = useExperience(experienceId)
 
   return (
@@ -41,6 +43,17 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
           Voltar para Experiencias
         </button>
       </div>
+
+      {error ? (
+        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">
+          <div className="flex items-center justify-between gap-4">
+            <span>{error}</span>
+            <button type="button" className="text-xs font-semibold uppercase tracking-[0.08em]" onClick={clearError}>
+              Fechar
+            </button>
+          </div>
+        </div>
+      ) : null}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
@@ -62,12 +75,16 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
             previewPath={previewPath}
             isSaved={isSaved}
             onSave={() => {
-              const saved = saveExperience('Rascunho')
-              navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
+              const saved = saveExperience('draft')
+              if (saved) {
+                navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
+              }
             }}
             onPublish={() => {
-              const saved = saveExperience('Publicado')
-              navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
+              const saved = saveExperience('published')
+              if (saved) {
+                navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
+              }
             }}
           />
 
