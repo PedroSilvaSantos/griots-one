@@ -1,7 +1,6 @@
 import { createEmptyExperience, experienceCategories } from '../features/experience/mocks/experience'
 import type { Experience } from '../features/experience/types/experience'
-
-const STORAGE_KEY = 'griots.experiences'
+import { experienceRepository } from './experience.repository'
 
 function slugify(value: string) {
   return value
@@ -27,25 +26,16 @@ function normalizeStatus(status: string) {
 }
 
 function parseStoredExperiences(): Experience[] {
-  const raw = localStorage.getItem(STORAGE_KEY)
-  if (!raw) return []
-
-  try {
-    const parsed = JSON.parse(raw) as Experience[]
-    if (!Array.isArray(parsed)) return []
-
-    return parsed.map((item) => ({
-      ...createEmptyExperience(),
-      ...item,
-      status: normalizeStatus(String(item.status ?? 'draft')),
-    }))
-  } catch {
-    return []
-  }
+  const experiences = experienceRepository.getAll()
+  return experiences.map((item) => ({
+    ...createEmptyExperience(),
+    ...item,
+    status: normalizeStatus(String(item.status ?? 'draft')),
+  }))
 }
 
 function persist(experiences: Experience[]) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(experiences))
+  experienceRepository.saveAll(experiences)
 }
 
 function ensureValidCategory(category: string): asserts category is Experience['category'] {
