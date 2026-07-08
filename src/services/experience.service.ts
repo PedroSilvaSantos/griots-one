@@ -2,6 +2,13 @@ import { createEmptyExperience, experienceCategories } from '../features/experie
 import type { Experience } from '../features/experience/types/experience'
 import { experienceRepository } from './experience.repository'
 
+export type ExperienceMutationStatus = 200 | 201
+
+export type ExperienceMutationResponse = {
+  status: ExperienceMutationStatus
+  experience: Experience
+}
+
 function slugify(value: string) {
   return value
     .trim()
@@ -30,6 +37,22 @@ function parseStoredExperiences(): Experience[] {
   return experiences.map((item) => ({
     ...createEmptyExperience(),
     ...item,
+    template: {
+      ...createEmptyExperience().template,
+      ...item.template,
+    },
+    brand: {
+      ...createEmptyExperience().brand,
+      ...item.brand,
+    },
+    theme: {
+      ...createEmptyExperience().theme,
+      ...item.theme,
+    },
+    content: {
+      ...createEmptyExperience().content,
+      ...item.content,
+    },
     status: normalizeStatus(String(item.status ?? 'draft')),
   }))
 }
@@ -71,7 +94,7 @@ export function getExperienceBySlug(slug: string): Experience | null {
   return parseStoredExperiences().find((item) => item.slug === slug) ?? null
 }
 
-export function createExperience(payload: Experience): Experience {
+export async function createExperience(payload: Experience): Promise<ExperienceMutationResponse> {
   ensureValidName(payload.name)
   ensureValidCategory(payload.category)
 
@@ -91,10 +114,13 @@ export function createExperience(payload: Experience): Experience {
   }
 
   persist([next, ...experiences])
-  return next
+  return {
+    status: 201,
+    experience: next,
+  }
 }
 
-export function updateExperience(payload: Experience): Experience {
+export async function updateExperience(payload: Experience): Promise<ExperienceMutationResponse> {
   if (!payload.id) {
     throw new Error('ID da experiencia e obrigatorio para atualizar.')
   }
@@ -120,7 +146,10 @@ export function updateExperience(payload: Experience): Experience {
 
   experiences[index] = updated
   persist(experiences)
-  return updated
+  return {
+    status: 200,
+    experience: updated,
+  }
 }
 
 export function deleteExperience(id: string): void {

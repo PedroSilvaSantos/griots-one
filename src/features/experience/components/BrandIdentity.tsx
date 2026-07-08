@@ -9,6 +9,9 @@ type BrandIdentityProps = {
 
 const fields = [
   { key: 'logo' as const, label: 'Logo', placeholder: 'https://cdn.griots.one/logo.png' },
+  { key: 'secondaryLogo' as const, label: 'Logo Secundaria', placeholder: 'https://cdn.griots.one/logo-secondary.png' },
+  { key: 'userPhoto' as const, label: 'Foto do Usuario', placeholder: 'https://cdn.griots.one/user-photo.png' },
+  { key: 'candidatePhoto' as const, label: 'Foto do Candidato', placeholder: 'https://cdn.griots.one/candidate-photo.png' },
   { key: 'hero' as const, label: 'Imagem Hero', placeholder: 'https://cdn.griots.one/hero.png' },
   { key: 'background' as const, label: 'Background', placeholder: 'https://cdn.griots.one/background.jpg' },
   { key: 'frame' as const, label: 'Frame PNG', placeholder: 'https://cdn.griots.one/frame.png' },

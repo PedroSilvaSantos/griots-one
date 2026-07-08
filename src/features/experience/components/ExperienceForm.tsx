@@ -1,17 +1,38 @@
+import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useExperience } from '../hooks/useExperience'
 import { BrandIdentity } from './BrandIdentity'
-import { ExperiencePreview } from './ExperiencePreview'
 import { LandingContent } from './LandingContent'
 import { PublishActions } from './PublishActions'
 import { ThemeEditor } from './ThemeEditor'
+import { FeedbackModal } from '../../../components/feedback/FeedbackModal'
+import { ExperienceTemplateEngine } from '../../../features/experience-template-engine'
 
 type ExperienceFormProps = {
   experienceId?: string
 }
 
+type FeedbackState = {
+  isOpen: boolean
+  type: 'success' | 'error'
+  title: string
+  message: string
+  confirmText: string
+  cancelText?: string
+  onConfirm: () => void
+}
+
 export function ExperienceForm({ experienceId }: ExperienceFormProps) {
   const navigate = useNavigate()
+  const [feedbackModal, setFeedbackModal] = useState<FeedbackState>({
+    isOpen: false,
+    type: 'success',
+    title: '',
+    message: '',
+    confirmText: '',
+    cancelText: undefined,
+    onConfirm: () => {},
+  })
   const {
     experience,
     isSaved,
@@ -24,9 +45,73 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
     updateSocial,
     updateSetting,
     saveExperience,
-    error,
-    clearError,
+    saving,
   } = useExperience(experienceId)
+
+  const closeModal = () => {
+    setFeedbackModal((current) => ({ ...current, isOpen: false }))
+  }
+
+  const openSaveModal = (nextExperienceId?: string) => {
+    setFeedbackModal({
+      isOpen: true,
+      type: 'success',
+      title: 'Alterações salvas com sucesso!',
+      message: 'Suas alterações foram salvas e já estão disponíveis para futuras edições.',
+      confirmText: 'OK',
+      onConfirm: () => {
+        if (nextExperienceId) {
+          navigate(`/admin/experiences/${nextExperienceId}/edit`, { replace: true })
+        }
+
+        closeModal()
+      },
+    })
+  }
+
+  const openPublishModal = (publishedUrl: string) => {
+    setFeedbackModal({
+      isOpen: true,
+      type: 'success',
+      title: 'Landing Page publicada!',
+      message: 'Sua Landing Page foi publicada com sucesso e já pode ser acessada pelos visitantes.',
+      confirmText: 'Visualizar Landing Page',
+      cancelText: 'Fechar',
+      onConfirm: () => {
+        window.open(publishedUrl, '_blank', 'noopener,noreferrer')
+        closeModal()
+      },
+    })
+  }
+
+  const handleSave = async (nextStatus: 'draft' | 'published') => {
+    try {
+      const response = await saveExperience(nextStatus)
+
+      if (!response || (response.status !== 200 && response.status !== 201)) {
+        return
+      }
+
+      const publishedUrl = `/demo/${response.experience.slug}`
+
+      if (nextStatus === 'published') {
+        openPublishModal(publishedUrl)
+        return
+      }
+
+      openSaveModal(experienceId ? undefined : response.experience.id)
+    } catch (reason) {
+      setFeedbackModal({
+        isOpen: true,
+        type: 'error',
+        title: 'Nao foi possivel salvar',
+        message: reason instanceof Error ? reason.message : 'Falha ao salvar experiencia.',
+        confirmText: 'Fechar',
+        onConfirm: closeModal,
+      })
+      return
+    }
+  }
 
   return (
     <div className="space-y-6">
@@ -43,17 +128,6 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
           Voltar para Experiencias
         </button>
       </div>
-
-      {error ? (
-        <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700 dark:border-rose-500/30 dark:bg-rose-500/10 dark:text-rose-300">
-          <div className="flex items-center justify-between gap-4">
-            <span>{error}</span>
-            <button type="button" className="text-xs font-semibold uppercase tracking-[0.08em]" onClick={clearError}>
-              Fechar
-            </button>
-          </div>
-        </div>
-      ) : null}
 
       <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1.1fr_0.9fr]">
         <div className="space-y-6">
@@ -74,23 +148,29 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
           <PublishActions
             previewPath={previewPath}
             isSaved={isSaved}
+            saving={saving}
             onSave={() => {
-              const saved = saveExperience('draft')
-              if (saved) {
-                navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
-              }
+              void handleSave('draft')
             }}
             onPublish={() => {
-              const saved = saveExperience('published')
-              if (saved) {
-                navigate(`/admin/experiences/${saved.id}/edit`, { replace: true })
-              }
+              void handleSave('published')
             }}
           />
 
-          <ExperiencePreview experience={experience} />
+          <ExperienceTemplateEngine experience={experience} onUploadImage={(file) => updateBrandFile('candidatePhoto', file)} />
         </div>
       </div>
+
+      <FeedbackModal
+        isOpen={feedbackModal.isOpen}
+        type={feedbackModal.type}
+        title={feedbackModal.title}
+        message={feedbackModal.message}
+        confirmText={feedbackModal.confirmText}
+        cancelText={feedbackModal.cancelText}
+        onConfirm={feedbackModal.onConfirm}
+        onClose={closeModal}
+      />
     </div>
   )
 }

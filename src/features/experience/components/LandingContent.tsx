@@ -20,6 +20,14 @@ const contentFields = [
   { key: 'cta' as const, label: 'Texto CTA' },
   { key: 'features' as const, label: 'Texto de Features' },
   { key: 'footer' as const, label: 'Texto de Rodape' },
+  { key: 'candidateName' as const, label: 'Nome do Candidato' },
+  { key: 'candidateNumber' as const, label: 'Numero do Candidato' },
+  { key: 'hashtag' as const, label: 'Hashtag' },
+  { key: 'topLeftText' as const, label: 'Texto Superior Esquerdo' },
+  { key: 'topRightText' as const, label: 'Texto Superior Direito' },
+  { key: 'bottomLine1' as const, label: 'Texto Inferior Linha 1' },
+  { key: 'bottomLine2' as const, label: 'Texto Inferior Linha 2' },
+  { key: 'party' as const, label: 'Partido' },
 ]
 
 const socialFields = [

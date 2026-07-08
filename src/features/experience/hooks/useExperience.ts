@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import {
   createExperience,
   getExperienceById,
@@ -17,14 +17,68 @@ function slugify(value: string) {
     .replace(/(^-|-$)+/g, '')
 }
 
+function isQuotaExceededError(reason: unknown) {
+  return (
+    reason instanceof DOMException &&
+    (reason.name === 'QuotaExceededError' || reason.name === 'NS_ERROR_DOM_QUOTA_REACHED')
+  )
+}
+
+async function fileToOptimizedDataUrl(file: File) {
+  const imageUrl = URL.createObjectURL(file)
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const element = new Image()
+
+      element.onload = () => resolve(element)
+      element.onerror = () => reject(new Error('file-read-error'))
+      element.src = imageUrl
+    })
+
+    const maxDimension = 1280
+    const scale = Math.min(1, maxDimension / Math.max(image.width, image.height))
+    const width = Math.max(1, Math.round(image.width * scale))
+    const height = Math.max(1, Math.round(image.height * scale))
+
+    const canvas = document.createElement('canvas')
+    canvas.width = width
+    canvas.height = height
+
+    const context = canvas.getContext('2d')
+    if (!context) {
+      throw new Error('file-read-error')
+    }
+
+    context.drawImage(image, 0, 0, width, height)
+
+    return canvas.toDataURL('image/webp', 0.82)
+  } finally {
+    URL.revokeObjectURL(imageUrl)
+  }
+}
+
 export function useExperience(experienceId?: string) {
   const [experience, setExperience] = useState<Experience>(createEmptyExperience)
   const [isSaved, setIsSaved] = useState(false)
   const [error, setError] = useState<string>('')
+  const [saving, setSaving] = useState(false)
+  const experienceRef = useRef(experience)
+  const pendingUploadsRef = useRef<Promise<void>[]>([])
+
+  useEffect(() => {
+    experienceRef.current = experience
+  }, [experience])
+
+  const commitExperience = useCallback((nextExperience: Experience) => {
+    experienceRef.current = nextExperience
+    setExperience(nextExperience)
+  }, [])
 
   useEffect(() => {
     if (!experienceId) {
-      setExperience(createEmptyExperience())
+      const nextExperience = createEmptyExperience()
+      commitExperience(nextExperience)
       setIsSaved(false)
       setError('')
       return
@@ -33,119 +87,157 @@ export function useExperience(experienceId?: string) {
     const existing = getExperienceById(experienceId)
 
     if (existing) {
-      setExperience(existing)
+      commitExperience(existing)
       setIsSaved(true)
       setError('')
       return
     }
 
-    setExperience(createEmptyExperience())
+    const nextExperience = createEmptyExperience()
+    commitExperience(nextExperience)
     setIsSaved(false)
     setError('Experiencia nao encontrada.')
-  }, [experienceId])
+  }, [commitExperience, experienceId])
 
   const updateField = useCallback(<K extends keyof Experience>(field: K, value: Experience[K]) => {
-    setExperience((current) => ({
-      ...current,
+    const next = {
+      ...experienceRef.current,
       [field]: value,
-    }))
-  }, [])
+    }
+
+    commitExperience(next)
+  }, [commitExperience])
 
   const updateBrand = useCallback(<K extends keyof Experience['brand']>(field: K, value: Experience['brand'][K]) => {
-    setExperience((current) => ({
-      ...current,
+    const next = {
+      ...experienceRef.current,
       brand: {
-        ...current.brand,
+        ...experienceRef.current.brand,
         [field]: value,
       },
-    }))
-  }, [])
+    }
+
+    commitExperience(next)
+  }, [commitExperience])
 
   const updateBrandFile = useCallback(async (field: keyof Experience['brand'], file: File) => {
-    const dataUrl = await new Promise<string>((resolve, reject) => {
-      const reader = new FileReader()
+    const uploadPromise = fileToOptimizedDataUrl(file)
 
-      reader.onload = () => resolve(String(reader.result ?? ''))
-      reader.onerror = () => reject(new Error('file-read-error'))
-      reader.readAsDataURL(file)
+    const applyPromise = uploadPromise.then((dataUrl) => {
+      const next = {
+        ...experienceRef.current,
+        brand: {
+          ...experienceRef.current.brand,
+          [field]: dataUrl,
+        },
+      }
+
+      commitExperience(next)
     })
 
-    setExperience((current) => ({
-      ...current,
-      brand: {
-        ...current.brand,
-        [field]: dataUrl,
-      },
-    }))
-  }, [])
+    pendingUploadsRef.current = [...pendingUploadsRef.current, applyPromise]
+
+    try {
+      await applyPromise
+    } finally {
+      pendingUploadsRef.current = pendingUploadsRef.current.filter((pending) => pending !== applyPromise)
+    }
+  }, [commitExperience])
 
   const updateTheme = useCallback(<K extends keyof Experience['theme']>(field: K, value: Experience['theme'][K]) => {
-    setExperience((current) => ({
-      ...current,
+    const next = {
+      ...experienceRef.current,
       theme: {
-        ...current.theme,
+        ...experienceRef.current.theme,
         [field]: value,
       },
-    }))
-  }, [])
+    }
+
+    commitExperience(next)
+  }, [commitExperience])
 
   const updateContent = useCallback(
     <K extends keyof Experience['content']>(field: K, value: Experience['content'][K]) => {
-      setExperience((current) => ({
-        ...current,
+      const next = {
+        ...experienceRef.current,
         content: {
-          ...current.content,
+          ...experienceRef.current.content,
           [field]: value,
         },
-      }))
+      }
+
+      commitExperience(next)
     },
-    [],
+    [commitExperience],
   )
 
   const updateSocial = useCallback(<K extends keyof Experience['social']>(field: K, value: Experience['social'][K]) => {
-    setExperience((current) => ({
-      ...current,
+    const next = {
+      ...experienceRef.current,
       social: {
-        ...current.social,
+        ...experienceRef.current.social,
         [field]: value,
       },
-    }))
-  }, [])
+    }
+
+    commitExperience(next)
+  }, [commitExperience])
 
   const updateSetting = useCallback(
     <K extends keyof Experience['settings']>(field: K, value: Experience['settings'][K]) => {
-      setExperience((current) => ({
-        ...current,
+      const next = {
+        ...experienceRef.current,
         settings: {
-          ...current.settings,
+          ...experienceRef.current.settings,
           [field]: value,
         },
-      }))
+      }
+
+      commitExperience(next)
     },
-    [],
+    [commitExperience],
   )
 
   const saveExperience = useCallback(
-    (nextStatus?: Experience['status']) => {
+    async (nextStatus?: Experience['status']) => {
+      await Promise.all(pendingUploadsRef.current)
+
+      const currentExperience = experienceRef.current
       const payload: Experience = {
-        ...experience,
-        slug: slugify(experience.slug || experience.name),
-        status: nextStatus ?? experience.status,
+        ...currentExperience,
+        slug: slugify(currentExperience.slug || currentExperience.name),
+        status: nextStatus ?? currentExperience.status,
       }
+
+      setSaving(true)
+      setError('')
 
       try {
-        const saved = experience.id ? updateExperience(payload) : createExperience(payload)
-        setExperience(saved)
-        setIsSaved(true)
-        setError('')
+        console.info('Iniciando salvamento', { experienceId: currentExperience.id || null, status: payload.status })
+        console.info('Payload enviado', payload)
 
-        return saved
+        const response = currentExperience.id ? await updateExperience(payload) : await createExperience(payload)
+
+        console.info('Resposta recebida', response)
+
+        commitExperience(response.experience)
+        setIsSaved(true)
+
+        return response
       } catch (reason) {
+        console.error('Erro ao salvar', reason)
+        if (isQuotaExceededError(reason)) {
+          setError('Nao foi possivel salvar: o armazenamento local atingiu o limite.')
+          throw new Error('Nao foi possivel salvar: o armazenamento local atingiu o limite.')
+        }
+
         setError(reason instanceof Error ? reason.message : 'Falha ao salvar experiencia.')
-        return null
+        throw reason instanceof Error ? reason : new Error('Falha ao salvar experiencia.')
+      } finally {
+        setSaving(false)
       }
     },
-    [experience],
+    [commitExperience],
   )
 
   const previewPath = useMemo(
@@ -166,6 +258,7 @@ export function useExperience(experienceId?: string) {
     updateSetting,
     saveExperience,
     error,
+    saving,
     clearError: () => setError(''),
   }
 }

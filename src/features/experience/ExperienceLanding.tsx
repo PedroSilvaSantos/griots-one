@@ -1,12 +1,14 @@
+import { useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button } from '../../components/layout/Button'
-import { ExperienceRenderer } from './ExperienceRenderer'
+import { ExperienceRenderer as TemplateExperienceRenderer } from '../experience-template-engine/components/ExperienceRenderer'
 import { useExperienceLoader } from './useExperienceLoader'
 
 export function ExperienceLanding() {
   const navigate = useNavigate()
   const { slug = '' } = useParams<{ slug: string }>()
   const { experience, notFound } = useExperienceLoader(slug)
+  const canvasRef = useRef<HTMLCanvasElement | null>(null)
 
   if (notFound || !experience) {
     return (
@@ -24,7 +26,9 @@ export function ExperienceLanding() {
 
   return (
     <section className="px-4 py-12 sm:px-8 sm:py-16">
-      <ExperienceRenderer experience={experience} />
+      <div className="mx-auto w-full max-w-5xl rounded-3xl border border-white/70 bg-white/85 p-4 shadow-[0_18px_50px_-30px_rgba(16,35,63,0.55)] backdrop-blur-md sm:p-6">
+        <TemplateExperienceRenderer canvasRef={canvasRef} experience={experience} />
+      </div>
     </section>
   )
 }

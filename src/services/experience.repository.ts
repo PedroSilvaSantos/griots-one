@@ -4,12 +4,29 @@ import type { Experience } from '../features/experience/types/experience'
 const STORAGE_KEY = 'griots.experiences'
 
 function sanitizePersistedExperience(experience: Experience): Experience {
+  const defaults = createEmptyExperience()
+  const isHexColor = (value: unknown) => typeof value === 'string' && /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/.test(value)
+
   return {
-    ...createEmptyExperience(),
+    ...defaults,
     ...experience,
     brand: {
-      ...createEmptyExperience().brand,
+      ...defaults.brand,
       ...experience.brand,
+    },
+    theme: {
+      ...defaults.theme,
+      ...experience.theme,
+      surface: isHexColor(experience.theme?.surface) ? String(experience.theme.surface) : defaults.theme.surface,
+      frame: isHexColor(experience.theme?.frame) ? String(experience.theme.frame) : defaults.theme.frame,
+    },
+    content: {
+      ...defaults.content,
+      ...experience.content,
+    },
+    template: {
+      ...defaults.template,
+      ...experience.template,
     },
   }
 }

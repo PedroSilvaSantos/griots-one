@@ -10,6 +10,13 @@ const colorFields = [
   { key: 'secondary' as const, label: 'Cor Secundaria' },
   { key: 'accent' as const, label: 'Cor de Destaque' },
   { key: 'button' as const, label: 'Cor do Botao' },
+  { key: 'backgroundStart' as const, label: 'Cor do Fundo - Inicio' },
+  { key: 'backgroundEnd' as const, label: 'Cor do Fundo - Fim' },
+  { key: 'text' as const, label: 'Cor dos Textos' },
+  { key: 'mutedText' as const, label: 'Cor dos Textos Secundarios' },
+  { key: 'surface' as const, label: 'Cor da Moldura' },
+  { key: 'frame' as const, label: 'Cor da Borda' },
+  { key: 'onPrimary' as const, label: 'Cor do Texto do Botao' },
 ]
 
 export function ThemeEditor({ experience, onThemeChange }: ThemeEditorProps) {

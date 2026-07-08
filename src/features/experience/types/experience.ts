@@ -1,3 +1,5 @@
+import type { ExperienceTemplateId } from '../../../features/experience-template-engine/types/template'
+
 export type ExperienceCategory =
   | 'Campanha'
   | 'Evento'
@@ -16,8 +18,14 @@ export interface Experience {
   slug: string
   category: ExperienceCategory
   status: ExperienceStatus
+  template: {
+    id: ExperienceTemplateId
+  }
   brand: {
     logo: string
+    secondaryLogo: string
+    userPhoto: string
+    candidatePhoto: string
     hero: string
     background: string
     frame: string
@@ -27,6 +35,14 @@ export interface Experience {
     secondary: string
     accent: string
     button: string
+    backgroundStart: string
+    backgroundEnd: string
+    text: string
+    mutedText: string
+    surface: string
+    shadow: string
+    onPrimary: string
+    frame: string
     radius: number
   }
   content: {
@@ -35,6 +51,14 @@ export interface Experience {
     cta: string
     features: string
     footer: string
+    candidateName: string
+    candidateNumber: string
+    hashtag: string
+    topLeftText: string
+    topRightText: string
+    bottomLine1: string
+    bottomLine2: string
+    party: string
   }
   social: {
     instagram: string
