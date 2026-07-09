@@ -14,6 +14,7 @@ import {
   type ColorPalette,
 } from '../design-system'
 import { renderImageNode } from './imageRenderer'
+import { isNodeVisible } from './rendering'
 import { renderShapeNode } from './shapeRenderer'
 import { renderTextNode } from './textRenderer'
 
@@ -119,6 +120,10 @@ export function renderTemplateCanvas(
       const regionBox = toBox(regionConfig.layout, template, canvasPreset.width, canvasPreset.height)
 
       regionConfig.nodes.forEach((node) => {
+        if (!isNodeVisible(node)) {
+          return
+        }
+
         const box = toNodeBox(regionBox, node)
 
         if (node.kind === 'shape') {

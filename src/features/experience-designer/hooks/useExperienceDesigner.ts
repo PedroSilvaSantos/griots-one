@@ -315,9 +315,6 @@ export function useExperienceDesigner(experience: Experience) {
 
     updateElement(elementId, {
       visible: !located.element.visible,
-      styles: {
-        opacity: located.element.visible ? 0 : Math.max(0.1, located.element.styles?.opacity ?? 1),
-      },
     })
   }, [model, updateElement])
 

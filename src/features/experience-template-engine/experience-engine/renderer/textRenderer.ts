@@ -9,19 +9,13 @@ import {
   renderDefaultText,
   renderHashtag,
 } from './textComponents'
-
-type Box = {
-  x: number
-  y: number
-  width: number
-  height: number
-}
+import type { RenderBox } from './rendering'
 
 export function renderTextNode(
   context: CanvasRenderingContext2D,
   node: TextNode,
   text: string,
-  box: Box,
+  box: RenderBox,
   palette: ColorPalette,
   scaler: Scaler,
 ) {

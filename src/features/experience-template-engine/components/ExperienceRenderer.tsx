@@ -29,7 +29,7 @@ export function ExperienceRenderer({ canvasRef, experience, preset = DEFAULT_CAN
       ref={canvasRef}
       width={presetSize.width}
       height={presetSize.height}
-      className="h-auto w-full rounded-3xl border border-white/70 bg-white shadow-[0_16px_42px_-28px_rgba(16,35,63,0.55)]"
+      className="block h-auto w-full bg-transparent"
     />
   )
 }

@@ -34,12 +34,14 @@ export function Breadcrumb() {
   if (!parts.length) return null
 
   return (
-    <nav aria-label="Breadcrumb" className="mb-4 px-1">
-      <ol className="flex flex-wrap items-center gap-2 text-xs font-semibold uppercase tracking-[0.1em] text-[var(--brand-muted)] dark:text-slate-400">
+    <nav aria-label="Breadcrumb" className="mb-5 px-1">
+      <ol className="flex flex-wrap items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.14em] text-[var(--brand-muted)] dark:text-slate-400">
         {parts.map((part, index) => (
           <li key={`${part}-${index}`} className="flex items-center gap-2">
-            {index > 0 ? <span className="opacity-60">&gt;</span> : null}
-            <span>{part}</span>
+            {index > 0 ? <span className="h-1 w-1 rounded-full bg-current opacity-45" /> : null}
+            <span className={index === parts.length - 1 ? 'text-[var(--brand-ink)] dark:text-slate-200' : ''}>
+              {part}
+            </span>
           </li>
         ))}
       </ol>

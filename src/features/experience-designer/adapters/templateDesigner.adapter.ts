@@ -33,7 +33,7 @@ function toDesignerElement(node: TemplateNode, index: number): DesignerTemplateE
     id: node.id,
     name: node.id,
     type: inferElementType(node),
-    visible: (node.opacity ?? 1) > 0,
+    visible: node.visible ?? (node.opacity ?? 1) > 0,
     zIndex: index,
     x: node.box?.x ?? 0,
     y: node.box?.y ?? 0,
@@ -52,6 +52,7 @@ function toDesignerElement(node: TemplateNode, index: number): DesignerTemplateE
       image: {
         fit: node.fit,
         cropMode: node.cropMode,
+        mask: node.mask,
         radius: node.radius,
         opacity: node.opacity,
         shadow: node.shadow,
@@ -109,11 +110,12 @@ function toNode(element: DesignerTemplateElement): TemplateNode {
     return {
       id: element.id,
       kind: 'shape',
-      fill: element.styles?.background ?? 'Surface',
+      fill: element.styles?.background,
       border: element.styles?.border,
       stroke: element.styles?.borderColor,
       radius: element.styles?.borderRadius,
       shadow: element.styles?.shadow,
+      visible: element.visible,
       opacity,
       box,
     }
@@ -143,6 +145,7 @@ function toNode(element: DesignerTemplateElement): TemplateNode {
       ellipsis: true,
       uppercase: element.text?.uppercase,
       minFontSize: element.text?.minFontSize,
+      visible: element.visible,
       opacity,
       box,
     }
@@ -154,10 +157,12 @@ function toNode(element: DesignerTemplateElement): TemplateNode {
     source: element.source ?? 'brand.logo',
     fit: element.image?.fit,
     cropMode: element.image?.cropMode,
+    mask: element.image?.mask,
     border: element.styles?.border,
     borderColor: element.styles?.borderColor,
     radius: element.image?.radius ?? element.styles?.borderRadius,
     shadow: element.image?.shadow ?? element.styles?.shadow,
+    visible: element.visible,
     opacity,
     box,
   }

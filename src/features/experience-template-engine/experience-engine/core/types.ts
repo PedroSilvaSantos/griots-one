@@ -97,6 +97,7 @@ export type LayoutRegion = {
 
 type BaseNode = {
   id: string
+  visible?: boolean
   opacity?: number
   box?: {
     x: number
@@ -108,7 +109,7 @@ type BaseNode = {
 
 export type ShapeNode = BaseNode & {
   kind: 'shape'
-  fill: ColorToken
+  fill?: ColorToken
   stroke?: ColorToken
   border?: BorderToken
   radius?: RadiusToken

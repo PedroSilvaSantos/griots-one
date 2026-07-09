@@ -1,14 +1,16 @@
 import { templateManager } from '../../experience-template-engine/services/templateManager'
 import type { ExperienceTemplateId } from '../../experience-template-engine/types/template'
 import { toDesignerModel, toEngineTemplate } from '../adapters/templateDesigner.adapter'
+import { normalizeDesignerTemplateModel } from './templateDesigner.normalizer'
 import { templateDesignerRepository } from './templateDesigner.repository'
 
 export function loadDesignerTemplate(templateId: ExperienceTemplateId) {
   const persisted = templateDesignerRepository.get(templateId)
   if (persisted) {
-    const engineTemplate = toEngineTemplate(persisted)
+    const normalized = normalizeDesignerTemplateModel(templateId, persisted)
+    const engineTemplate = toEngineTemplate(normalized)
     templateManager.setOverride(templateId, engineTemplate)
-    return persisted
+    return normalized
   }
 
   const baseTemplate = templateManager.getBase(templateId)
@@ -22,10 +24,12 @@ export function applyDesignerTemplate(templateId: ExperienceTemplateId) {
     return
   }
 
-  templateManager.setOverride(templateId, toEngineTemplate(persisted))
+  const normalized = normalizeDesignerTemplateModel(templateId, persisted)
+  templateManager.setOverride(templateId, toEngineTemplate(normalized))
 }
 
 export function saveDesignerTemplate(templateId: ExperienceTemplateId, model: ReturnType<typeof loadDesignerTemplate>) {
-  templateDesignerRepository.save(templateId, model)
-  templateManager.setOverride(templateId, toEngineTemplate(model))
+  const normalized = normalizeDesignerTemplateModel(templateId, model)
+  templateDesignerRepository.save(templateId, normalized)
+  templateManager.setOverride(templateId, toEngineTemplate(normalized))
 }

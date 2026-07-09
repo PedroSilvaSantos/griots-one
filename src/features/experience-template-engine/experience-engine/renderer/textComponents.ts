@@ -66,7 +66,7 @@ export function renderHashtag(
     box: paddedBox,
     style,
     align: 'center',
-    verticalAlign: 'middle',
+    verticalAlign: node.verticalAlign ?? 'middle',
     maxLines: node.maxLines ?? 3,
     minFontSize: node.minFontSize ? scaler.fontScale(node.minFontSize) : scaler.fontScale(18),
     autoScale: true,

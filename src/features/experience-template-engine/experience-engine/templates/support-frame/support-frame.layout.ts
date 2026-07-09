@@ -3,14 +3,19 @@ import { createGridLayout } from '../../design-system/layout'
 
 type SupportFrameRegions = ExperienceTemplateConfig['regions']
 
+type SupportFrameLayoutOptions = {
+  headerEnabled?: boolean
+  footerPhotoEnabled?: boolean
+}
+
 function normalizeRatio(value: number) {
   return Math.max(0, value)
 }
 
 function createMainGrid(headerEnabled: boolean) {
-  const headerRatio = normalizeRatio(headerEnabled ? 0.08 : 0)
-  const photoRatio = normalizeRatio(headerEnabled ? 0.7 : 0.78)
-  const footerRatio = normalizeRatio(0.18)
+  const headerRatio = normalizeRatio(headerEnabled ? 0.07 : 0)
+  const photoRatio = normalizeRatio(headerEnabled ? 0.66 : 0.74)
+  const footerRatio = normalizeRatio(0.23)
 
   return createGridLayout({
     x: 0.04,
@@ -19,11 +24,15 @@ function createMainGrid(headerEnabled: boolean) {
     height: 0.94,
     columns: [1],
     rows: [headerRatio, photoRatio, footerRatio],
-    rowGap: 0.012,
+    rowGap: 0.01,
   })
 }
 
-export function buildSupportFrameRegionLayout(headerEnabled = true): Record<string, LayoutRegion> {
+export function buildSupportFrameRegionLayout(options: SupportFrameLayoutOptions = {}): Record<string, LayoutRegion> {
+  const {
+    headerEnabled = true,
+    footerPhotoEnabled = true,
+  } = options
   const mainGrid = createMainGrid(headerEnabled)
   const headerArea = mainGrid.place(0, 0, 1, 1, {
     padding: 'xs',
@@ -60,13 +69,13 @@ export function buildSupportFrameRegionLayout(headerEnabled = true): Record<stri
     width: photoArea.width,
     height: photoArea.height,
     columns: [1],
-    rows: [0.62, 0.2, 0.18],
+    rows: [0.78, 0.22],
   })
 
   const hashtagArea = photoGrid.place(0, 1, 1, 1, {
-    safeArea: { top: 'xs', right: 'sm', bottom: 'xs', left: 'sm' },
+    safeArea: { top: 'sm', right: 'sm', bottom: 'sm', left: 'sm' },
     horizontalAlign: 'center',
-    verticalAlign: 'middle',
+    verticalAlign: 'bottom',
   })
 
   const footerGrid = createGridLayout({
@@ -74,10 +83,10 @@ export function buildSupportFrameRegionLayout(headerEnabled = true): Record<stri
     y: footerArea.y,
     width: footerArea.width,
     height: footerArea.height,
-    columns: [4.8, 3.6, 3.6],
-    rows: [0.38, 0.28, 0.34],
-    columnGap: 0.014,
-    rowGap: 0.01,
+    columns: footerPhotoEnabled ? [4.8, 3.6, 3.6] : [6.4, 3.2],
+    rows: footerPhotoEnabled ? [0.38, 0.28, 0.34] : [0.4, 0.6],
+    columnGap: footerPhotoEnabled ? 0.014 : 0.02,
+    rowGap: footerPhotoEnabled ? 0.01 : 0.02,
   })
 
   return {
@@ -96,22 +105,38 @@ export function buildSupportFrameRegionLayout(headerEnabled = true): Record<stri
     OverlayArea: photoArea,
     HashtagArea: hashtagArea,
     FooterArea: footerArea,
-    FooterLine1Area: footerGrid.place(1, 0, 1, 1, {
+    FooterLine1Area: footerPhotoEnabled ? footerGrid.place(1, 0, 1, 1, {
       safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
       horizontalAlign: 'left',
       verticalAlign: 'middle',
+    }) : footerGrid.place(0, 0, 2, 1, {
+      safeArea: { top: 'xs', right: 'sm', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'bottom',
     }),
-    FooterLine2Area: footerGrid.place(1, 1, 1, 2, {
+    FooterLine2Area: footerPhotoEnabled ? footerGrid.place(1, 1, 1, 2, {
       safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
       horizontalAlign: 'left',
       verticalAlign: 'middle',
-    }),
-    CandidateNumberArea: footerGrid.place(0, 0, 1, 3, {
-      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+    }) : footerGrid.place(1, 1, 1, 1, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'sm' },
       horizontalAlign: 'left',
       verticalAlign: 'middle',
     }),
-    CandidatePhotoArea: footerGrid.place(2, 0, 1, 3, {
+    CandidateNumberArea: footerPhotoEnabled ? footerGrid.place(0, 0, 1, 3, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'middle',
+    }) : footerGrid.place(0, 1, 1, 1, {
+      safeArea: { top: 'xs', right: 'sm', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'bottom',
+    }),
+    CandidatePhotoArea: footerPhotoEnabled ? footerGrid.place(2, 0, 1, 3, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+    }) : footerGrid.place(1, 0, 1, 2, {
       safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
       horizontalAlign: 'right',
       verticalAlign: 'bottom',
@@ -121,7 +146,11 @@ export function buildSupportFrameRegionLayout(headerEnabled = true): Record<stri
 
 export function resolveSupportFrameRegions(regions: SupportFrameRegions): SupportFrameRegions {
   const headerEnabled = regions.HeaderArea?.enabled ?? true
-  const resolvedLayout = buildSupportFrameRegionLayout(headerEnabled)
+  const footerPhotoEnabled = regions.CandidatePhotoArea?.enabled ?? true
+  const resolvedLayout = buildSupportFrameRegionLayout({
+    headerEnabled,
+    footerPhotoEnabled,
+  })
 
   return Object.fromEntries(
     Object.entries(regions).map(([regionName, regionConfig]) => {

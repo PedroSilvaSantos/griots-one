@@ -4,6 +4,7 @@ import type {
   ExperienceTemplateConfig,
   ExperienceTemplateId,
   HorizontalAlign,
+  ImageNode,
   LayoutRegion,
   RadiusToken,
   ShadowToken,
@@ -60,6 +61,7 @@ export type DesignerImageStyle = {
   fit?: 'cover' | 'contain'
   cropMode?: 'center' | 'smart'
   crop?: boolean
+  mask?: ImageNode['mask']
   radius?: RadiusToken
   opacity?: number
   shadow?: ShadowToken

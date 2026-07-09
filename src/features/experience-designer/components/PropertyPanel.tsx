@@ -152,7 +152,7 @@ export const PropertyPanel = memo(function PropertyPanel({ element, onPatch }: P
 
             <label className="mt-2 flex items-center justify-between rounded-lg border border-[#d8e2ea] px-2 py-2 text-xs dark:border-white/10">
               <span>Visible</span>
-              <input type="checkbox" checked={element.visible} onChange={(event) => onPatch({ visible: event.target.checked, styles: { opacity: event.target.checked ? Math.max(0.1, element.styles?.opacity ?? 1) : 0 } })} />
+              <input type="checkbox" checked={element.visible} onChange={(event) => onPatch({ visible: event.target.checked })} />
             </label>
           </>
         ) : null}

@@ -32,8 +32,10 @@ export function DashboardLayout() {
         <div className="flex min-h-screen flex-1 flex-col">
           <Header title={title} onToggleSidebar={() => setMobileOpen(true)} />
           <main className="flex-1 p-4 sm:p-6">
-            <Breadcrumb />
-            <Outlet />
+            <div className="mx-auto w-full max-w-[1720px]">
+              <Breadcrumb />
+              <Outlet />
+            </div>
           </main>
         </div>
       </div>
