@@ -1,7 +1,7 @@
 import type { ExperienceTemplateConfig } from '../../core/types'
 import { CanvasPresets } from '../../core/canvas-presets'
-import { supportFrameLayout } from './support-frame.layout'
-import { supportFrameNodes } from './support-frame.styles'
+import { supportFrameRegions } from './support-frame.styles'
+import { resolveSupportFrameRegions } from './support-frame.layout'
 
 export const supportFrameTemplateEngineConfig: ExperienceTemplateConfig = {
   id: 'support-frame',
@@ -15,6 +15,5 @@ export const supportFrameTemplateEngineConfig: ExperienceTemplateConfig = {
     { family: 'Manrope', weight: 700 },
     { family: 'Montserrat', weight: 900 },
   ],
-  layout: supportFrameLayout,
-  nodes: supportFrameNodes,
+  regions: resolveSupportFrameRegions(supportFrameRegions),
 }

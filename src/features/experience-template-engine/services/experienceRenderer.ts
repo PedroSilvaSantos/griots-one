@@ -1,4 +1,5 @@
 import type { Experience } from '../../experience/types/experience'
+import { applyDesignerTemplate } from '../../experience-designer/services/templateDesigner.service'
 import type { CanvasPresetId } from '../experience-engine/core/canvas-presets'
 import { resolveDataSource } from '../experience-engine/core/data'
 import { loadImageAsset } from './assetLoader'
@@ -8,7 +9,10 @@ import { templateManager } from './templateManager'
 
 async function loadAssets(experience: Experience) {
   const template = templateManager.get(experience.template.id)
-  const imageNodes = template.nodes.filter((node): node is Extract<(typeof template.nodes)[number], { kind: 'image' }> => node.kind === 'image')
+  const imageNodes = Object.values(template.regions)
+    .filter((region) => region.enabled)
+    .flatMap((region) => region.nodes)
+    .filter((node): node is Extract<(typeof template.regions)[string]['nodes'][number], { kind: 'image' }> => node.kind === 'image')
   const uniqueSources = Array.from(new Set(imageNodes.map((node) => node.source)))
 
   const entries = await Promise.all(
@@ -43,6 +47,7 @@ export class ExperienceRenderer {
     },
   ) {
     const scale = options?.scale ?? 1
+    applyDesignerTemplate(experience.template.id)
     const template = templateManager.get(experience.template.id)
     await ensureFontsLoaded(template.fonts)
     const { assets, missingAssets } = await loadAssets(experience)

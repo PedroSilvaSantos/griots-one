@@ -32,17 +32,38 @@ function drawFitImage(
   image: HTMLImageElement,
   box: Box,
   fit: 'cover' | 'contain',
+  cropMode: 'center' | 'smart',
 ) {
   const ratioX = box.width / image.width
   const ratioY = box.height / image.height
   const ratio = fit === 'contain' ? Math.min(ratioX, ratioY) : Math.max(ratioX, ratioY)
 
-  const width = image.width * ratio
-  const height = image.height * ratio
-  const x = box.x + (box.width - width) / 2
-  const y = box.y + (box.height - height) / 2
+  const drawWidth = image.width * ratio
+  const drawHeight = image.height * ratio
 
-  context.drawImage(image, x, y, width, height)
+  if (fit === 'contain') {
+    const x = box.x + (box.width - drawWidth) / 2
+    const y = box.y + (box.height - drawHeight) / 2
+    context.drawImage(image, x, y, drawWidth, drawHeight)
+    return
+  }
+
+  if (cropMode === 'smart') {
+    const overflowX = Math.max(0, drawWidth - box.width)
+    const overflowY = Math.max(0, drawHeight - box.height)
+
+    const focusX = 0.5
+    const focusY = 0.34
+
+    const x = box.x - overflowX * focusX
+    const y = box.y - overflowY * focusY
+    context.drawImage(image, x, y, drawWidth, drawHeight)
+    return
+  }
+
+  const x = box.x + (box.width - drawWidth) / 2
+  const y = box.y + (box.height - drawHeight) / 2
+  context.drawImage(image, x, y, drawWidth, drawHeight)
 }
 
 export function renderImageNode(
@@ -85,7 +106,7 @@ export function renderImageNode(
     context.clip()
   }
 
-  drawFitImage(context, image, box, node.fit ?? 'cover')
+  drawFitImage(context, image, box, node.fit ?? 'cover', node.cropMode ?? 'center')
   context.restore()
 
   if (borderWidth > 0) {

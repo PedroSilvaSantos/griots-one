@@ -11,9 +11,10 @@ type ExperienceRendererProps = {
   canvasRef: React.RefObject<HTMLCanvasElement | null>
   experience: Experience
   preset?: CanvasPresetId
+  renderVersion?: number
 }
 
-export function ExperienceRenderer({ canvasRef, experience, preset = DEFAULT_CANVAS_PRESET }: ExperienceRendererProps) {
+export function ExperienceRenderer({ canvasRef, experience, preset = DEFAULT_CANVAS_PRESET, renderVersion = 0 }: ExperienceRendererProps) {
   const presetSize = CanvasPresets[preset]
 
   useEffect(() => {
@@ -21,7 +22,7 @@ export function ExperienceRenderer({ canvasRef, experience, preset = DEFAULT_CAN
     if (!canvas) return
 
     void previewService.renderPreview(canvas, experience, preset)
-  }, [canvasRef, experience, preset])
+  }, [canvasRef, experience, preset, renderVersion])
 
   return (
     <canvas

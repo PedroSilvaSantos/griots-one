@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom'
 import { useExperience } from '../hooks/useExperience'
 import { BrandIdentity } from './BrandIdentity'
 import { LandingContent } from './LandingContent'
-import { PublishActions } from './PublishActions'
 import { ThemeEditor } from './ThemeEditor'
 import { FeedbackModal } from '../../../components/feedback/FeedbackModal'
 import { ExperienceTemplateEngine } from '../../../features/experience-template-engine'
@@ -145,19 +144,19 @@ export function ExperienceForm({ experienceId }: ExperienceFormProps) {
         </div>
 
         <div className="space-y-4 xl:sticky xl:top-24 xl:self-start">
-          <PublishActions
+          <ExperienceTemplateEngine
+            experience={experience}
             previewPath={previewPath}
             isSaved={isSaved}
             saving={saving}
-            onSave={() => {
+            onSaveDraft={() => {
               void handleSave('draft')
             }}
             onPublish={() => {
               void handleSave('published')
             }}
+            onUploadImage={(file) => updateBrandFile('candidatePhoto', file)}
           />
-
-          <ExperienceTemplateEngine experience={experience} onUploadImage={(file) => updateBrandFile('candidatePhoto', file)} />
         </div>
       </div>
 

@@ -1,96 +1,142 @@
-import { createRegion } from '../../design-system/layout'
+import type { ExperienceTemplateConfig, LayoutRegion } from '../../core/types'
+import { createGridLayout } from '../../design-system/layout'
 
-export const supportFrameLayout = {
-  SafeArea: createRegion(0.045, 0.03, 0.91, 0.94, {
+type SupportFrameRegions = ExperienceTemplateConfig['regions']
+
+function normalizeRatio(value: number) {
+  return Math.max(0, value)
+}
+
+function createMainGrid(headerEnabled: boolean) {
+  const headerRatio = normalizeRatio(headerEnabled ? 0.08 : 0)
+  const photoRatio = normalizeRatio(headerEnabled ? 0.7 : 0.78)
+  const footerRatio = normalizeRatio(0.18)
+
+  return createGridLayout({
+    x: 0.04,
+    y: 0.03,
+    width: 0.92,
+    height: 0.94,
+    columns: [1],
+    rows: [headerRatio, photoRatio, footerRatio],
+    rowGap: 0.012,
+  })
+}
+
+export function buildSupportFrameRegionLayout(headerEnabled = true): Record<string, LayoutRegion> {
+  const mainGrid = createMainGrid(headerEnabled)
+  const headerArea = mainGrid.place(0, 0, 1, 1, {
+    padding: 'xs',
+    safeArea: { top: 'sm', right: 'md', bottom: 'xs', left: 'md' },
+    horizontalAlign: 'center',
+    verticalAlign: 'middle',
+  })
+  const photoArea = mainGrid.place(0, 1, 1, 1, {
+    padding: 'xs',
+    safeArea: { top: 'sm', right: 'sm', bottom: 'sm', left: 'sm' },
+    horizontalAlign: 'center',
+    verticalAlign: 'middle',
+  })
+  const footerArea = mainGrid.place(0, 2, 1, 1, {
     padding: 'sm',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  HeaderArea: createRegion(0.085, 0.055, 0.83, 0.085, {
-    padding: 'xs',
-    margin: 'xs',
+    safeArea: { top: 'sm', right: 'sm', bottom: 'sm', left: 'sm' },
     horizontalAlign: 'left',
     verticalAlign: 'middle',
-  }),
-  LogoArea: createRegion(0.102, 0.065, 0.29, 0.05, {
-    padding: 'xs',
-    margin: 'xs',
+  })
+
+  const headerGrid = createGridLayout({
+    x: headerArea.x,
+    y: headerArea.y,
+    width: headerArea.width,
+    height: headerArea.height,
+    columns: [1, 1],
+    rows: [1],
+    columnGap: 0.02,
+  })
+
+  const photoGrid = createGridLayout({
+    x: photoArea.x,
+    y: photoArea.y,
+    width: photoArea.width,
+    height: photoArea.height,
+    columns: [1],
+    rows: [0.62, 0.2, 0.18],
+  })
+
+  const hashtagArea = photoGrid.place(0, 1, 1, 1, {
+    safeArea: { top: 'xs', right: 'sm', bottom: 'xs', left: 'sm' },
     horizontalAlign: 'center',
     verticalAlign: 'middle',
-  }),
-  UserPhotoArea: createRegion(0.79, 0.058, 0.11, 0.062, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  SideLogoTopArea: createRegion(0.79, 0.138, 0.11, 0.032, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  SideLogoBottomArea: createRegion(0.79, 0.175, 0.11, 0.032, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  TopLeftTextArea: createRegion(0.103, 0.146, 0.51, 0.04, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'left',
-    verticalAlign: 'middle',
-  }),
-  TopRightTextArea: createRegion(0.618, 0.146, 0.287, 0.04, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'right',
-    verticalAlign: 'middle',
-  }),
-  PhotoArea: createRegion(0.085, 0.192, 0.83, 0.54, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  HashtagArea: createRegion(0.095, 0.748, 0.81, 0.085, {
-    padding: 'sm',
-    margin: 'xs',
-    horizontalAlign: 'center',
-    verticalAlign: 'middle',
-  }),
-  CandidateArea: createRegion(0.095, 0.842, 0.81, 0.062, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'left',
-    verticalAlign: 'middle',
-  }),
-  NumberArea: createRegion(0.095, 0.904, 0.47, 0.076, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'left',
-    verticalAlign: 'middle',
-  }),
-  PartyArea: createRegion(0.575, 0.916, 0.33, 0.045, {
-    padding: 'xs',
-    margin: 'xs',
-    horizontalAlign: 'right',
-    verticalAlign: 'middle',
-  }),
-  FooterArea: createRegion(0.095, 0.96, 0.81, 0.028, {
-    padding: 'xs',
-    horizontalAlign: 'left',
-    verticalAlign: 'middle',
-  }),
-  FooterLine2Area: createRegion(0.095, 0.986, 0.81, 0.014, {
-    horizontalAlign: 'left',
-    verticalAlign: 'middle',
-  }),
-  ExperienceNameArea: createRegion(0.62, 0.875, 0.285, 0.03, {
-    padding: 'xs',
-    horizontalAlign: 'right',
-    verticalAlign: 'middle',
-  }),
+  })
+
+  const footerGrid = createGridLayout({
+    x: footerArea.x,
+    y: footerArea.y,
+    width: footerArea.width,
+    height: footerArea.height,
+    columns: [4.8, 3.6, 3.6],
+    rows: [0.38, 0.28, 0.34],
+    columnGap: 0.014,
+    rowGap: 0.01,
+  })
+
+  return {
+    HeaderArea: headerArea,
+    LogoLeftArea: headerGrid.place(0, 0, 1, 1, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'middle',
+    }),
+    LogoRightArea: headerGrid.place(1, 0, 1, 1, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'right',
+      verticalAlign: 'middle',
+    }),
+    PhotoArea: photoArea,
+    OverlayArea: photoArea,
+    HashtagArea: hashtagArea,
+    FooterArea: footerArea,
+    FooterLine1Area: footerGrid.place(1, 0, 1, 1, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'middle',
+    }),
+    FooterLine2Area: footerGrid.place(1, 1, 1, 2, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'middle',
+    }),
+    CandidateNumberArea: footerGrid.place(0, 0, 1, 3, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'left',
+      verticalAlign: 'middle',
+    }),
+    CandidatePhotoArea: footerGrid.place(2, 0, 1, 3, {
+      safeArea: { top: 'xs', right: 'xs', bottom: 'xs', left: 'xs' },
+      horizontalAlign: 'right',
+      verticalAlign: 'bottom',
+    }),
+  }
+}
+
+export function resolveSupportFrameRegions(regions: SupportFrameRegions): SupportFrameRegions {
+  const headerEnabled = regions.HeaderArea?.enabled ?? true
+  const resolvedLayout = buildSupportFrameRegionLayout(headerEnabled)
+
+  return Object.fromEntries(
+    Object.entries(regions).map(([regionName, regionConfig]) => {
+      const shouldRender = regionName === 'LogoLeftArea' || regionName === 'LogoRightArea'
+        ? regionConfig.enabled && headerEnabled
+        : regionConfig.enabled
+
+      return [
+        regionName,
+        {
+          ...regionConfig,
+          enabled: shouldRender,
+          layout: resolvedLayout[regionName] ?? regionConfig.layout,
+        },
+      ]
+    }),
+  )
 }

@@ -39,19 +39,29 @@ export type TypographyToken =
 
 export type LayoutAreaName =
   | 'HeaderArea'
+  | 'LogoLeftArea'
+  | 'LogoRightArea'
   | 'PhotoArea'
+  | 'OverlayArea'
   | 'HashtagArea'
   | 'FooterArea'
-  | 'CandidateArea'
-  | 'NumberArea'
-  | 'PartyArea'
-  | 'LogoArea'
-  | 'SafeArea'
+  | 'FooterLine1Area'
+  | 'FooterLine2Area'
+  | 'CandidateNumberArea'
+  | 'CandidatePhotoArea'
+  | 'CandidateInfoArea'
   | string
 
 export type HorizontalAlign = 'left' | 'center' | 'right' | 'justify'
 
 export type VerticalAlign = 'top' | 'middle' | 'bottom'
+
+export type SafeAreaInsets = {
+  top?: SpacingToken
+  right?: SpacingToken
+  bottom?: SpacingToken
+  left?: SpacingToken
+}
 
 export type TemplateFont = {
   family: string
@@ -80,14 +90,20 @@ export type LayoutRegion = {
   height: number
   padding?: SpacingToken
   margin?: SpacingToken
+  safeArea?: SafeAreaInsets
   horizontalAlign?: HorizontalAlign
   verticalAlign?: VerticalAlign
 }
 
 type BaseNode = {
   id: string
-  region: LayoutAreaName
   opacity?: number
+  box?: {
+    x: number
+    y: number
+    width: number
+    height: number
+  }
 }
 
 export type ShapeNode = BaseNode & {
@@ -117,6 +133,7 @@ export type ImageNode = BaseNode & {
   kind: 'image'
   source: string
   fit?: 'cover' | 'contain'
+  cropMode?: 'center' | 'smart'
   border?: BorderToken
   borderColor?: ColorToken
   radius?: RadiusToken
@@ -145,8 +162,15 @@ export type ExperienceTemplateConfig = {
   height: number
   fonts: TemplateFont[]
   theme: ExperienceEngineThemeId
-  layout: Record<LayoutAreaName, LayoutRegion>
-  nodes: TemplateNode[]
+  regions: Record<
+    LayoutAreaName,
+    {
+      enabled: boolean
+      order: number
+      layout: LayoutRegion
+      nodes: TemplateNode[]
+    }
+  >
 }
 
 export type RenderWarning = {
